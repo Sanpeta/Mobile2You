@@ -15,7 +15,8 @@ class ViewController: UIViewController {
     var likes: UILabel!
     var popularityIcon: UIImageView!
     var popularity: UILabel!
-    var favButton: UIButton!
+    var favButton: UIImageView!
+    var statusFavButton: Bool = true
     var filmsTableView: UITableView!
     
     //size view
@@ -97,6 +98,8 @@ class ViewController: UIViewController {
         popularityIcon.image = UIImage(systemName: "star.fill")
         popularityIcon.tintColor = .white
         
+        
+        //MARK: - Config Lavel Popularity
         popularity = UILabel(
             frame: CGRect(
                 x: popularityIcon.frame.maxX + 8,
@@ -109,16 +112,21 @@ class ViewController: UIViewController {
         popularity.textAlignment = .left
         popularity.font = likes.font.withSize(16)
         
-        favButton = UIButton(
+        
+        //MARK: - Config Button FavButton
+        favButton = UIImageView(
             frame: CGRect(
-                x: 0,
-                y: 170,
-                width: 40,
-                height: 40
+                x: widthScreen - 56,
+                y: heroImage.frame.maxY + 16,
+                width: 26,
+                height: 24
             )
         )
+        favButton.image = UIImage(systemName: "suit.heart.fill")
+        favButton.tintColor = .white
+        favButton.isUserInteractionEnabled = true
+        favButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(changeIconFavButton(tap:)) ))
         
-        favButton.backgroundColor = .red
         
         //Add all on the main view
         self.view.addSubview(heroImage)
@@ -127,7 +135,7 @@ class ViewController: UIViewController {
         self.view.addSubview(likesIcon)
         self.view.addSubview(popularityIcon)
         self.view.addSubview(popularity)
-//        self.view.addSubview(favButton)
+        self.view.addSubview(favButton)
 //        self.view.addSubview(filmsTableView)
     }
 
@@ -189,6 +197,16 @@ class ViewController: UIViewController {
             }
             
             task.resume()
+        }
+    }
+    
+    @objc func changeIconFavButton(tap: UITapGestureRecognizer) {
+        if statusFavButton {
+            self.favButton.image = UIImage(systemName: "suit.heart.fill")
+            statusFavButton = !statusFavButton
+        } else {
+            self.favButton.image = UIImage(systemName: "heart")
+            statusFavButton = !statusFavButton
         }
     }
     
