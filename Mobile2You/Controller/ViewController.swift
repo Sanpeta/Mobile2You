@@ -75,13 +75,14 @@ class ViewController: UIViewController {
             frame: CGRect(
                 x: likesIcon.frame.maxX + 8,
                 y: likesIcon.frame.minY,
-                width: widthScreen*0.05,
+                width: widthScreen*0.25,
                 height: 20
             )
         )
         likes.textColor = .white
         likes.textAlignment = .left
-        likes.font = likes.font.withSize(14)
+        likes.font = likes.font.withSize(16)
+        
         
         popularity = UILabel(
             frame: CGRect(
