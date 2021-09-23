@@ -263,7 +263,7 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        scrollView.contentSize.height = self.likes.frame.maxY + heightScreen*0.11*10
+        scrollView.contentSize.height = self.likes.frame.maxY + 16 + heightScreen*0.11*9
         return 10
     }
     
