@@ -60,13 +60,14 @@ class ViewController: UIViewController {
         //MARK: - Config Image LikesIcon
         likesIcon = UIImageView(
             frame: CGRect(
-                x: 0,
-                y: 16,
+                x: 16,
+                y: heroTitle.frame.maxY + 16,
                 width: 20,
-                height: 20
+                height: 18
             )
         )
-        likesIcon.image = UIImage(systemName: "heart")
+        likesIcon.image = UIImage(systemName: "suit.heart.fill")
+        likesIcon.tintColor = .white
         
         
         //MARK: - Config Label Likes
