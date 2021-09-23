@@ -1,0 +1,15 @@
+{
+  "images" : [
+    {
+      "filename" : "Captura de Tela 2021-09-23 às 11.27.47.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
+  }
+}
