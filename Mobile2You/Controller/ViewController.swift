@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     var heroTitle: UILabel!
     var likesIcon: UIImageView!
     var likes: UILabel!
+    var popularityIcon: UIImageView!
     var popularity: UILabel!
     var favButton: UIButton!
     var filmsTableView: UITableView!
@@ -84,14 +85,29 @@ class ViewController: UIViewController {
         likes.font = likes.font.withSize(16)
         
         
-        popularity = UILabel(
+        //MARK: - Config Image PopularityIcon
+        popularityIcon = UIImageView(
             frame: CGRect(
-                x: 0,
-                y: 130,
-                width: 100,
-                height: 40
+                x: likes.frame.maxX + widthScreen*0.01,
+                y: heroTitle.frame.maxY + 16,
+                width: 20,
+                height: 18
             )
         )
+        popularityIcon.image = UIImage(systemName: "star.fill")
+        popularityIcon.tintColor = .white
+        
+        popularity = UILabel(
+            frame: CGRect(
+                x: popularityIcon.frame.maxX + 8,
+                y: popularityIcon.frame.minY,
+                width: widthScreen*0.30,
+                height: 20
+            )
+        )
+        popularity.textColor = .white
+        popularity.textAlignment = .left
+        popularity.font = likes.font.withSize(16)
         
         favButton = UIButton(
             frame: CGRect(
@@ -109,6 +125,7 @@ class ViewController: UIViewController {
         self.view.addSubview(heroTitle)
         self.view.addSubview(likes)
         self.view.addSubview(likesIcon)
+        self.view.addSubview(popularityIcon)
         self.view.addSubview(popularity)
 //        self.view.addSubview(favButton)
 //        self.view.addSubview(filmsTableView)
