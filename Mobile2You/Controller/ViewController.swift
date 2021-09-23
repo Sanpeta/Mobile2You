@@ -8,6 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
 
     var heroImage: HeroImage!
     var heroTitle: UILabel!
@@ -17,13 +18,12 @@ class ViewController: UIViewController {
     var popularity: UILabel!
     var favButton: UIImageView!
     var statusFavButton: Bool = true
-    var filmsTableView: UITableView!
+    var moviesTableView: UITableView!
     
     //size view
     var widthScreen = CGFloat()
     var heightScreen = CGFloat()
     
-//    https://image.tmdb.org/t/p/original/
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -128,6 +128,17 @@ class ViewController: UIViewController {
         favButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(changeIconFavButton(tap:)) ))
         
         
+        //MARK: - Config TableView
+        moviesTableView = UITableView(
+            frame: CGRect(
+                x: 0,
+                y: 0,
+                width: widthScreen,
+                height: heightScreen*0.35
+            )
+        )            
+        
+        
         //Add all on the main view
         self.view.addSubview(heroImage)
         self.view.addSubview(heroTitle)
@@ -136,7 +147,7 @@ class ViewController: UIViewController {
         self.view.addSubview(popularityIcon)
         self.view.addSubview(popularity)
         self.view.addSubview(favButton)
-//        self.view.addSubview(filmsTableView)
+        self.view.addSubview(moviesTableView)
     }
 
     
@@ -211,3 +222,4 @@ class ViewController: UIViewController {
     }
     
 }
+

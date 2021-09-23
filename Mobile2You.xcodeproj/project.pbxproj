@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D4C3772726FCB6B20043DAC3 /* MovieTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C3772626FCB6B20043DAC3 /* MovieTableViewCell.swift */; };
 		D4DEC17026FB79BE0069D2B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DEC16F26FB79BE0069D2B3 /* AppDelegate.swift */; };
 		D4DEC17226FB79BE0069D2B3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DEC17126FB79BE0069D2B3 /* SceneDelegate.swift */; };
 		D4DEC17426FB79BE0069D2B3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DEC17326FB79BE0069D2B3 /* ViewController.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D4C3772626FCB6B20043DAC3 /* MovieTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieTableViewCell.swift; sourceTree = "<group>"; };
 		D4DEC16C26FB79BE0069D2B3 /* Mobile2You.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mobile2You.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4DEC16F26FB79BE0069D2B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D4DEC17126FB79BE0069D2B3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 			children = (
 				D4DEC17526FB79BE0069D2B3 /* Main.storyboard */,
 				D4DEC18626FB8E8B0069D2B3 /* HeroImage.swift */,
+				D4C3772626FCB6B20043DAC3 /* MovieTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -172,6 +175,7 @@
 			files = (
 				D4DEC17426FB79BE0069D2B3 /* ViewController.swift in Sources */,
 				D4DEC17026FB79BE0069D2B3 /* AppDelegate.swift in Sources */,
+				D4C3772726FCB6B20043DAC3 /* MovieTableViewCell.swift in Sources */,
 				D4DEC17226FB79BE0069D2B3 /* SceneDelegate.swift in Sources */,
 				D4DEC18726FB8E8B0069D2B3 /* HeroImage.swift in Sources */,
 				D4DEC18B26FBE6810069D2B3 /* APIKey.swift in Sources */,
