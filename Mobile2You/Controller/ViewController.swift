@@ -7,9 +7,15 @@
 
 import UIKit
 
+//Global variable sizes
+var widthScreen = CGFloat()
+var heightScreen = CGFloat()
+var statusBarHeight = CGFloat()
+
 class ViewController: UIViewController {
     
-
+    var scrollView: UIScrollView!
+    var shadowImageView: UIImageView!
     var heroImage: HeroImage!
     var heroTitle: UILabel!
     var likesIcon: UIImageView!
@@ -20,10 +26,6 @@ class ViewController: UIViewController {
     var statusFavButton: Bool = true
     var moviesTableView: UITableView!
     
-    //size view
-    var widthScreen = CGFloat()
-    var heightScreen = CGFloat()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,8 +34,33 @@ class ViewController: UIViewController {
         //take size of screen
         widthScreen = self.view.frame.size.width
         heightScreen = self.view.frame.size.height
+        statusBarHeight = UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIApplication.shared.statusBarFrame.size.height
+
         
-        view.backgroundColor = .black
+        view.backgroundColor = UIColor(named: Constants.backgroundColor)
+        
+        scrollView = UIScrollView(
+            frame: CGRect(
+                x: 0,
+                y: -statusBarHeight,
+                width: widthScreen,
+                height: heightScreen
+            )
+        )
+        scrollView.delegate = self
+        scrollView.showsVerticalScrollIndicator = false
+        
+        shadowImageView = UIImageView(
+            frame: CGRect(
+                x: 0,
+                y: 0,
+                width: widthScreen, // 100% of the Width Screen
+                height: heightScreen * 0.45 // 45% of the Height Screen
+            )
+        )
+        shadowImageView.image = UIImage(named: "Shadow")
+        shadowImageView.layer.zPosition = 2
+        
         
         heroImage = HeroImage(
             frame: CGRect(
@@ -43,7 +70,8 @@ class ViewController: UIViewController {
                 height: heightScreen * 0.45 // 45% of the Height Screen
             )
         )
-        
+        heroImage.layer.zPosition = 1
+    
         
         //MARK: - Config Label HeroTitle
         heroTitle = UILabel(
@@ -110,7 +138,7 @@ class ViewController: UIViewController {
         )
         popularity.textColor = .white
         popularity.textAlignment = .left
-        popularity.font = likes.font.withSize(16)
+        popularity.font = popularity.font.withSize(16)
         
         
         //MARK: - Config Button FavButton
@@ -128,33 +156,36 @@ class ViewController: UIViewController {
         favButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(changeIconFavButton(tap:)) ))
         
         
-        //MARK: - Config TableView
+        //MARK: - Config MoviesTableView
         moviesTableView = UITableView(
             frame: CGRect(
                 x: 0,
-                y: 0,
+                y: popularity.frame.maxY + 16,
                 width: widthScreen,
-                height: heightScreen*0.35
+                height: heightScreen
             )
-        )            
+        )
+        moviesTableView.delegate = self
+        moviesTableView.dataSource = self
+        moviesTableView.register(MovieTableViewCell.self, forCellReuseIdentifier: "cell")
+        moviesTableView.isScrollEnabled = false
+        moviesTableView.showsVerticalScrollIndicator = false
+        moviesTableView.backgroundColor = UIColor(named: Constants.backgroundColor)
+        moviesTableView.layer.zPosition = 1
+        moviesTableView.rowHeight = heightScreen*0.11
+                
         
-        
-        //Add all on the main view
-        self.view.addSubview(heroImage)
-        self.view.addSubview(heroTitle)
-        self.view.addSubview(likes)
-        self.view.addSubview(likesIcon)
-        self.view.addSubview(popularityIcon)
-        self.view.addSubview(popularity)
-        self.view.addSubview(favButton)
-        self.view.addSubview(moviesTableView)
-    }
-
-    
-    func decode(json: Data) {
-        if let movie = try? JSONDecoder().decode(Movie.self, from: json) {
-            print(movie.title)
-        }
+        //MARK: - Add all on the main view
+        self.view.addSubview(scrollView)
+        scrollView.addSubview(shadowImageView)
+        scrollView.addSubview(heroImage)
+        scrollView.addSubview(heroTitle)
+        scrollView.addSubview(likes)
+        scrollView.addSubview(likesIcon)
+        scrollView.addSubview(popularityIcon)
+        scrollView.addSubview(popularity)
+        scrollView.addSubview(favButton)
+        scrollView.addSubview(moviesTableView)
     }
     
     @objc func search() {
@@ -175,9 +206,14 @@ class ViewController: UIViewController {
                         let respostaJSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! NSDictionary
                         
                         DispatchQueue.main.async {
+                            
                             self.heroTitle.text = respostaJSON.value(forKey: "title") as? String
-                            self.likes.text = String((respostaJSON.value(forKey: "vote_count") as? Int)!)
-                            self.popularity.text = String((respostaJSON.value(forKey: "popularity") as? Double)!)
+                            
+                            let convertToK = Double((respostaJSON.value(forKey: "vote_count") as? Int)! / 1000)
+                            
+                            self.likes.text = "\(String(format: "%.1f", convertToK))K Likes"
+                            
+                            self.popularity.text = "\(String((respostaJSON.value(forKey: "popularity") as? Double)!)) views"
                             
                             self.loadImage(url: (respostaJSON.value(forKey: "backdrop_path") as? String)!)
                             
@@ -223,3 +259,30 @@ class ViewController: UIViewController {
     
 }
 
+//MARK: - EXTENSION TableViewDataSource
+extension ViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        scrollView.contentSize.height = self.likes.frame.maxY + heightScreen*0.11*10
+        return 10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = moviesTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MovieTableViewCell
+        cell.selectionStyle = .none
+        
+        // Download in memory
+        cell.imageCell.image = UIImage(named: "teste")
+        cell.titleCell.text = "A nightmare on Elm Street"
+        cell.yearCell.text = "1984"
+        cell.genreCell.text = "Horror, Drama"
+        
+        return cell
+    }
+    
+}
+
+
+//MARK: - EXTENSION TableViewDelegate
+extension ViewController: UITableViewDataSource {}

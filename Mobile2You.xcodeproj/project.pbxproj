@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D4C3772726FCB6B20043DAC3 /* MovieTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C3772626FCB6B20043DAC3 /* MovieTableViewCell.swift */; };
+		D4C3772926FCCD210043DAC3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C3772826FCCD210043DAC3 /* Constants.swift */; };
 		D4DEC17026FB79BE0069D2B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DEC16F26FB79BE0069D2B3 /* AppDelegate.swift */; };
 		D4DEC17226FB79BE0069D2B3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DEC17126FB79BE0069D2B3 /* SceneDelegate.swift */; };
 		D4DEC17426FB79BE0069D2B3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DEC17326FB79BE0069D2B3 /* ViewController.swift */; };
@@ -21,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		D4C3772626FCB6B20043DAC3 /* MovieTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieTableViewCell.swift; sourceTree = "<group>"; };
+		D4C3772826FCCD210043DAC3 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D4DEC16C26FB79BE0069D2B3 /* Mobile2You.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mobile2You.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4DEC16F26FB79BE0069D2B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D4DEC17126FB79BE0069D2B3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				D4DEC17A26FB79BF0069D2B3 /* LaunchScreen.storyboard */,
 				D4DEC17D26FB79BF0069D2B3 /* Info.plist */,
 				D4DEC18A26FBE6810069D2B3 /* APIKey.swift */,
+				D4C3772826FCCD210043DAC3 /* Constants.swift */,
 			);
 			path = Mobile2You;
 			sourceTree = "<group>";
@@ -180,6 +183,7 @@
 				D4DEC18726FB8E8B0069D2B3 /* HeroImage.swift in Sources */,
 				D4DEC18B26FBE6810069D2B3 /* APIKey.swift in Sources */,
 				D4DEC18926FBE2F00069D2B3 /* Movie.swift in Sources */,
+				D4C3772926FCCD210043DAC3 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
