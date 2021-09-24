@@ -26,10 +26,20 @@ class ViewController: UIViewController {
     var statusFavButton: Bool = true
     var moviesTableView: UITableView!
     
+    //Array
+    var listMovies: NSArray = []
+    var listGenres: NSArray = []
+    
+    //MARK: - Change to Status Bar Style to Light(White)
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         search()
+        searchList()
+        getGenre()
         
         //take size of screen
         widthScreen = self.view.frame.size.width
@@ -49,6 +59,7 @@ class ViewController: UIViewController {
         )
         scrollView.delegate = self
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.clipsToBounds = false
         
         shadowImageView = UIImageView(
             frame: CGRect(
@@ -233,6 +244,84 @@ class ViewController: UIViewController {
         task.resume()
     }
     
+    
+    
+    @objc func searchList() {
+        guard let minhaUrl = NSURL(string: "https://api.themoviedb.org/3/movie/157336/similar?api_key=\(API_KEY)") else {
+            return
+        }
+        let request = NSMutableURLRequest(url: minhaUrl as URL)
+        let task = URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
+            
+            let httpStatus = response as? HTTPURLResponse
+            
+            if httpStatus?.statusCode == 200 {
+                
+                if data?.count != 0 {
+                    
+                    do {
+                     
+                        let respostaJSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! NSDictionary
+                        
+                        DispatchQueue.main.async {
+                            
+                            self.listMovies = (respostaJSON.value(forKey: "results") as! NSArray)
+                            self.moviesTableView.reloadData()
+                            
+                        }
+                        
+                        
+                    } catch {
+                        print("Error")
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        task.resume()
+    }
+    
+    
+    @objc func getGenre() {
+        guard let minhaUrl = NSURL(string: "https://api.themoviedb.org/3/genre/movie/list?api_key=\(API_KEY)") else {
+            return
+        }
+        let request = NSMutableURLRequest(url: minhaUrl as URL)
+        let task = URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
+            
+            let httpStatus = response as? HTTPURLResponse
+            
+            if httpStatus?.statusCode == 200 {
+                
+                if data?.count != 0 {
+                    
+                    do {
+                     
+                        let respostaJSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! NSDictionary
+                        
+                        DispatchQueue.main.async {
+                            
+                            self.listGenres = (respostaJSON.value(forKey: "genres") as! NSArray)
+                                                        
+                            self.moviesTableView.reloadData()
+                            
+                        }
+                        
+                        
+                    } catch {
+                        print("Error")
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        task.resume()
+    }
+    
     func loadImage(url imageEndPoint: String) {
         if let url = URL(string: "https://image.tmdb.org/t/p/original\(imageEndPoint)") {
             let task = URLSession.shared.dataTask(with: url) { data, response, error in
@@ -263,20 +352,59 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        scrollView.contentSize.height = self.likes.frame.maxY + 16 + heightScreen*0.11*9
-        return 10
+        if(self.listMovies.count != 0) {
+            scrollView.contentSize.height = self.likes.frame.maxY + 16 + heightScreen*0.11 * CGFloat(self.listMovies.count)
+            self.moviesTableView.frame.size.height = heightScreen*0.11 * CGFloat(self.listMovies.count)
+            return self.listMovies.count
+        } else {
+            scrollView.contentSize.height = 0
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = moviesTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MovieTableViewCell
         cell.selectionStyle = .none
-        
+        let dict = self.listMovies.object(at: Int(indexPath.row)) as! NSDictionary
         // Download in memory
-        cell.imageCell.image = UIImage(named: "teste")
-        cell.titleCell.text = "A nightmare on Elm Street"
-        cell.yearCell.text = "1984"
-        cell.genreCell.text = "Horror, Drama"
+        if dict.isEqual(nil) {
+            cell.imageCell.image = UIImage(named: "teste")
+            cell.titleCell.text = "A nightmare on Elm Street"
+            cell.yearCell.text = "1984"
+            cell.genreCell.text = "Horror, Drama"
+        } else {
+            let imageEndPoint = dict.value(forKey: "poster_path") as! String
+            if let url = URL(string: "https://image.tmdb.org/t/p/original\(imageEndPoint)") {
+                let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                    guard let data = data, error == nil else { return }
+                    
+                    DispatchQueue.main.async { /// execute on main thread
+                        cell.imageCell.image = UIImage(data: data)
+                    }
+                }
+                
+                task.resume()
+            }
+            cell.titleCell.text = dict.value(forKey: "title") as? String
+            let year = String((dict.value(forKey: "release_date") as? String)!).split(separator: "-")
+            cell.yearCell.text = String(year[0])
+            var genreString = ""
+            for g in self.listGenres {
+                let value = g as! NSDictionary
+                let dictGenreIds = dict.value(forKey: "genre_ids") as! NSArray
+                for (index, genreMovie) in dictGenreIds.enumerated() {
+                    if value.allValues[0] as! Int == genreMovie as! Int {
+                        if index != dictGenreIds.count-1 {
+                            genreString += "\(value.allValues[1]), "
+                        } else {
+                            genreString += "\(value.allValues[1])"
+                        }
+                    }
+                }
+            }
+            cell.genreCell.text = genreString
+        }
         
         return cell
     }
