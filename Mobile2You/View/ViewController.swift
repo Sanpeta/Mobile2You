@@ -178,7 +178,7 @@ class ViewController: UIViewController {
         )
         moviesTableView.delegate = self
         moviesTableView.dataSource = self
-        moviesTableView.register(MovieTableViewCell.self, forCellReuseIdentifier: "cell")
+        moviesTableView.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.identifier)
         moviesTableView.isScrollEnabled = false
         moviesTableView.showsVerticalScrollIndicator = false
         moviesTableView.backgroundColor = UIColor(named: Constants.backgroundColor)
@@ -364,7 +364,7 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = moviesTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MovieTableViewCell
+        let cell = moviesTableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.identifier, for: indexPath) as! MovieTableViewCell
         cell.selectionStyle = .none
         let dict = self.listMovies.object(at: Int(indexPath.row)) as! NSDictionary
         // Download in memory
