@@ -14,6 +14,7 @@ var statusBarHeight = CGFloat()
 
 class ViewController: UIViewController {
     
+    //UIs
     var scrollView: UIScrollView!
     var shadowImageView: UIImageView!
     var heroImage: HeroImage!
@@ -30,6 +31,10 @@ class ViewController: UIViewController {
     var listMovies: NSArray = []
     var listGenres: NSArray = []
     
+    //ViewModels
+    //MovieViewModel
+    var movieViewModel: MovieViewModel!    
+    
     //MARK: - Change to Status Bar Style to Light(White)
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -37,7 +42,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        search()
+        fetchMovie()
         searchList()
         getGenre()
         
@@ -199,52 +204,23 @@ class ViewController: UIViewController {
         scrollView.addSubview(moviesTableView)
     }
     
-    @objc func search() {
-        guard let minhaUrl = NSURL(string: "https://api.themoviedb.org/3/movie/157336?api_key=\(API_KEY)") else {
-            return
-        }
-        let request = NSMutableURLRequest(url: minhaUrl as URL)
-        let task = URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
-            
-            let httpStatus = response as? HTTPURLResponse
-            
-            if httpStatus?.statusCode == 200 {
-                
-                if data?.count != 0 {
-                    
-                    do {
-                     
-                        let respostaJSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! NSDictionary
-                        
-                        DispatchQueue.main.async {
-                            
-                            self.heroTitle.text = respostaJSON.value(forKey: "title") as? String
-                            
-                            let convertToK = Double((respostaJSON.value(forKey: "vote_count") as? Int)! / 1000)
-                            
-                            self.likes.text = "\(String(format: "%.1f", convertToK))K Likes"
-                            
-                            self.popularity.text = "\(String((respostaJSON.value(forKey: "popularity") as? Double)!)) views"
-                            
-                            self.loadImage(url: (respostaJSON.value(forKey: "backdrop_path") as? String)!)
-                            
-                            self.view.layoutIfNeeded()
-                        }
-                        
-                        
-                    } catch {
-                        print("Error")
-                    }
-                    
-                }
-                
+    fileprivate func fetchMovie() {
+        Service.shared.searchMovie { movie, err in
+            if let err = err {
+                print("Erro Fetch movie", err)
+                return
             }
             
+            self.movieViewModel = MovieViewModel(movie: movie!)
+            
+            self.heroTitle.text = self.movieViewModel.title
+            self.likes.text = self.movieViewModel.vote_count
+            self.popularity.text = self.movieViewModel.popularity
+            self.loadImage(url: self.movieViewModel.backdrop_path)
+            
+            self.view.layoutIfNeeded()
         }
-        task.resume()
     }
-    
-    
     
     @objc func searchList() {
         guard let minhaUrl = NSURL(string: "https://api.themoviedb.org/3/movie/157336/similar?api_key=\(API_KEY)") else {
