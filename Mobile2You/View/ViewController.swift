@@ -30,8 +30,10 @@ class ViewController: UIViewController {
     //ViewModels
     //MovieViewModel
     var movieViewModel: MovieViewModel!
-    //SimilarMovieViewData
+    //SimilarMovieViewModel
     var similarMovieViewModels = [SimilarMovieViewModel]()
+    //GenreViewModel
+    var genreViewModels = [GenreViewModel]()
     
     //MARK: - Change to Status Bar Style to Light(White)
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -42,6 +44,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         fetchMovie()
         fetchSimilarMovieList()
+        fetchGenreList()
         
         //take size of screen
         widthScreen = self.view.frame.size.width
@@ -232,7 +235,20 @@ class ViewController: UIViewController {
             
             self.moviesTableView.reloadData()
         }
-    }            
+    }
+    
+    fileprivate func fetchGenreList() {
+        Service.shared.getGenres { genres, err in
+            if let err = err {
+                print("Erro Fetch Genres", err)
+                return
+            }
+            
+            self.genreViewModels = genres?.map({return GenreViewModel(genre: $0)}) ?? []
+            
+            self.moviesTableView.reloadData()
+        }
+    }
     
     @objc func changeIconFavButton(tap: UITapGestureRecognizer) {
         if statusFavButton {
@@ -271,21 +287,20 @@ extension ViewController: UITableViewDelegate {
             cell.imageCell.image = img
         })
                 
-//        var genreString = ""
-//        for g in self.listGenres {
-//            let value = g as! NSDictionary
-//            let dictGenreIds = dict.value(forKey: "genre_ids") as! NSArray
-//            for (index, genreMovie) in dictGenreIds.enumerated() {
-//                if value.allValues[0] as! Int == genreMovie as! Int {
-//                    if index != dictGenreIds.count-1 {
-//                        genreString += "\(value.allValues[1]), "
-//                    } else {
-//                        genreString += "\(value.allValues[1])"
-//                    }
-//                }
-//            }
-//        }
-//        cell.genreCell.text = genreString
+        var genreString = ""
+        for genreMovie in movieViewModelIndex.genre_ids {
+            for (index, genre) in genreViewModels.enumerated() {
+                if genre.id == genreMovie {
+                    if index != genreViewModels.count-1 {
+                        genreString += "\(genre.name), "
+                    } else {
+                        genreString += "\(genre.name)"
+                    }
+                }
+            }
+        }
+        
+        cell.genreCell.text = genreString
         cell.titleCell.text = movieViewModelIndex.title
         cell.yearCell.text = movieViewModelIndex.release_date
         
