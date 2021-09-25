@@ -288,10 +288,10 @@ extension ViewController: UITableViewDelegate {
         })
                 
         var genreString = ""
-        for genreMovie in movieViewModelIndex.genre_ids {
-            for (index, genre) in genreViewModels.enumerated() {
+        for (index, genreMovie) in movieViewModelIndex.genre_ids.enumerated() {
+            for genre in genreViewModels {
                 if genre.id == genreMovie {
-                    if index != genreViewModels.count-1 {
+                    if index != movieViewModelIndex.genre_ids.count-1 {
                         genreString += "\(genre.name), "
                     } else {
                         genreString += "\(genre.name)"
