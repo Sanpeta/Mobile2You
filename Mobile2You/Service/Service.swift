@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class Service: NSObject {
     static let shared = Service()
@@ -81,6 +82,22 @@ class Service: NSObject {
             
         }
         task.resume()
+    }
+    
+    func loadImage(url imageEndPoint: String, _ completion: @escaping (UIImage?) -> Void) {
+        if let url = URL(string: "https://image.tmdb.org/t/p/original\(imageEndPoint)") {
+            let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                guard let data = data, error == nil else { return }
+                
+                DispatchQueue.main.async { /// execute on main thread
+//                    self.heroImage.image =
+                    completion(UIImage(data: data))
+                }
+            }
+            
+            task.resume()
+        }
+        completion(nil)
     }
     
 }
