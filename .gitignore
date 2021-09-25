@@ -35,7 +35,8 @@ Temporary Items
 # Xcode
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
-Mobile2You/APIKey.swift
+
+APIKey.swift
 
 ## User settings
 xcuserdata/
