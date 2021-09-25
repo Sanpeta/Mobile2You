@@ -16,7 +16,8 @@ struct SimilarMovieViewModel {
     init(similarMovie: SimilarMovie) {
         self.title = similarMovie.title
         self.poster_path = similarMovie.poster_path
-        self.release_date = similarMovie.release_date
+        let year = similarMovie.release_date.split(separator: "-")
+        self.release_date = String(year[0])
         self.genre_ids = similarMovie.genre_ids
     }
 }
