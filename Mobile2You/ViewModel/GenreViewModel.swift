@@ -7,12 +7,26 @@
 
 import Foundation
 
-struct GenreViewModel {
-    let id: Int
-    let name: String
+struct GenresViewModel {
+    private let genres: Genres
     
+    init(_ genres: Genres) {
+        self.genres = genres
+    }
+}
+
+struct GenreViewModel {
+    private let genre: Genre
+
     init(genre: Genre) {
-        self.id = genre.id
-        self.name = genre.name
+        self.genre = genre
+    }
+    
+    var id: Int {
+        return self.genre.id
+    }
+    
+    var name: String {
+        return self.genre.name
     }
 }

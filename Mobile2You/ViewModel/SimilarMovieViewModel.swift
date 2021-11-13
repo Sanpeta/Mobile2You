@@ -7,17 +7,55 @@
 
 import Foundation
 
+//MARK: - Similar Movie List
+struct SimilarMovieListViewModel {
+    private let similarMovieList: SimilarMovieList
+    
+    init(similarMovieList: SimilarMovieList) {
+        self.similarMovieList = similarMovieList
+    }
+}
+
+extension SimilarMovieListViewModel {
+    var numberOfSection: Int {
+        return 1
+    }
+    
+    func numberOfRowsInSection(section: Int) -> Int {
+        return self.similarMovieList.results.count
+    }
+    
+    func similarMovieAtIndex(_ index: Int) -> SimilarMovieViewModel {
+        let movie = self.similarMovieList.results[index]
+        return SimilarMovieViewModel(similarMovie: movie)
+    }
+}
+
+
+//MARK: - Similar Movie
 struct SimilarMovieViewModel {
-    let title: String
-    let poster_path: String?
-    let release_date: String
-    let genre_ids: [Int]
+    private let similarMovie: SimilarMovie
     
     init(similarMovie: SimilarMovie) {
-        self.title = similarMovie.title
-        self.poster_path = similarMovie.poster_path
+        self.similarMovie = similarMovie
+    }
+}
+
+extension SimilarMovieViewModel {
+    var title: String {
+        return similarMovie.title
+    }
+    
+    var poster_path: String {
+        return similarMovie.poster_path ?? ""
+    }
+    
+    var release_date: String {
         let year = similarMovie.release_date.split(separator: "-")
-        self.release_date = String(year[0])
-        self.genre_ids = similarMovie.genre_ids
+        return String(year[0])
+    }
+    
+    var genre_ids: [Int] {
+        return similarMovie.genre_ids
     }
 }

@@ -47,7 +47,7 @@ class Service: NSObject {
         task.resume()
     }
     
-    func searchSimilarMovieList(completion: @escaping ([SimilarMovie]?, Error?) -> ()) {
+    func searchSimilarMovieList(completion: @escaping (SimilarMovieList?, Error?) -> ()) {
         guard let minhaUrl = NSURL(string: "https://api.themoviedb.org/3/movie/157336/similar?api_key=\(API_KEY)") else {
             return
         }
@@ -62,13 +62,11 @@ class Service: NSObject {
                     
                     do {
                                              
-                        let similarMovieListJSON = try JSONDecoder().decode(Similar.self, from: data!)
+                        let similarMovieListJSON = try JSONDecoder().decode(SimilarMovieList.self, from: data!)
                         
                         
                         DispatchQueue.main.async {
-                            
-                            completion(similarMovieListJSON.results, nil)
-                            
+                            completion(similarMovieListJSON, nil)
                         }
                         
                         

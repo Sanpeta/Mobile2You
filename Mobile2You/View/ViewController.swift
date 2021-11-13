@@ -31,7 +31,7 @@ class ViewController: UIViewController {
     //MovieViewModel
     var movieViewModel: MovieViewModel!
     //SimilarMovieViewModel
-    var similarMovieViewModels = [SimilarMovieViewModel]()
+    var similarMovieListViewModels: SimilarMovieListViewModel!
     //GenreViewModel
     var genreViewModels = [GenreViewModel]()
     
@@ -206,6 +206,7 @@ class ViewController: UIViewController {
         scrollView.addSubview(moviesTableView)
     }
     
+    //MARK: - Fetch Movie
     fileprivate func fetchMovie() {
         Service.shared.searchMovie { movie, err in
             if let err = err {
@@ -226,6 +227,7 @@ class ViewController: UIViewController {
         }
     }
     
+    //MARK: - Fetch Similar Movie List
     fileprivate func fetchSimilarMovieList() {
         Service.shared.searchSimilarMovieList { similarMovies, err in
             if let err = err {
@@ -233,12 +235,17 @@ class ViewController: UIViewController {
                 return
             }
             
-            self.similarMovieViewModels = similarMovies?.map({return SimilarMovieViewModel(similarMovie: $0)}) ?? []
-            
-            self.moviesTableView.reloadData()
+            if let similarMovieList = similarMovies {
+                self.similarMovieListViewModels = SimilarMovieListViewModel(similarMovieList: similarMovieList)
+                
+                DispatchQueue.main.async {
+                    self.moviesTableView.reloadData()
+                }
+            }
         }
     }
     
+    //MARK: - Fetch Genre List
     fileprivate func fetchGenreList() {
         Service.shared.getGenres { genres, err in
             if let err = err {
@@ -268,13 +275,13 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(self.similarMovieViewModels.count != 0) {
-            scrollView.contentSize.height = self.likes.frame.maxY + 16 + heightScreen*0.11 * CGFloat(self.similarMovieViewModels.count)
-            self.moviesTableView.frame.size.height = heightScreen*0.11 * CGFloat(self.similarMovieViewModels.count)
-            return self.similarMovieViewModels.count
-        } else {
+        if(self.similarMovieListViewModels == nil) {
             scrollView.contentSize.height = 0
             return 0
+        } else {
+            scrollView.contentSize.height = self.likes.frame.maxY + 16 + heightScreen*0.11 * CGFloat(self.similarMovieListViewModels.numberOfRowsInSection(section: section))
+            self.moviesTableView.frame.size.height = heightScreen*0.11 * CGFloat(self.similarMovieListViewModels.numberOfRowsInSection(section: section))
+            return self.similarMovieListViewModels.numberOfRowsInSection(section: section)
         }
     }
     
@@ -282,9 +289,10 @@ extension ViewController: UITableViewDelegate {
         
         let cell = moviesTableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.identifier, for: indexPath) as! MovieTableViewCell
         cell.selectionStyle = .none
-        let movieViewModelIndex = self.similarMovieViewModels[indexPath.row]
-        // Download in memory
-        let imageEndPoint = movieViewModelIndex.poster_path!
+        let movieViewModelIndex = self.similarMovieListViewModels.similarMovieAtIndex(indexPath.row)
+        
+        //Download in memory
+        let imageEndPoint = movieViewModelIndex.poster_path
         Service.shared.loadImage(url: imageEndPoint, {img in
             cell.imageCell.image = img
         })
