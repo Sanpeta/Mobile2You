@@ -7,8 +7,7 @@
 
 import Foundation
 
-struct Similar: Codable {
-    let page: Int
+struct SimilarMovieList: Codable {
     let results: [SimilarMovie]
 }
 
