@@ -54,6 +54,7 @@ class ViewController: UIViewController {
         
         view.backgroundColor = UIColor(named: Constants.backgroundColor)
         
+        //MARK: - ScrollView
         scrollView = UIScrollView(
             frame: CGRect(
                 x: 0,
@@ -66,6 +67,7 @@ class ViewController: UIViewController {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.clipsToBounds = false
         
+        //MARK: - Config Hero Image Shadow Movie
         shadowImageView = UIImageView(
             frame: CGRect(
                 x: 0,
@@ -77,7 +79,7 @@ class ViewController: UIViewController {
         shadowImageView.image = UIImage(named: "Shadow")
         shadowImageView.layer.zPosition = 2
         
-        
+        //MARK: - Config Hero Image Movie
         heroImage = HeroImage(
             frame: CGRect(
                 x: 0,
@@ -211,7 +213,7 @@ class ViewController: UIViewController {
                 return
             }
             
-            self.movieViewModel = MovieViewModel(movie: movie!)
+            self.movieViewModel = MovieViewModel(movie!)
             
             self.heroTitle.text = self.movieViewModel.title
             self.likes.text = self.movieViewModel.vote_count

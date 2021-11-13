@@ -8,23 +8,47 @@
 import Foundation
 import UIKit
 
-struct MovieViewModel {    
-    let title: String
-    let vote_count: String
-    let popularity: String
-    let backdrop_path: String
-    
-    //Dependency Injection
-    init(movie: Movie) {
-        self.title = movie.title
-        if movie.vote_count > 1000 {
-            let convertToK = Double(movie.vote_count / 1000)
-            self.vote_count = "\(String(format: "%.1f", convertToK))K Likes"
-        } else {
-            self.vote_count = "\(movie.vote_count) Likes"
-        }
-        self.popularity = "\(movie.popularity) views"
-        self.backdrop_path = movie.backdrop_path
+struct MovieViewModel {
+    private let movie: Movie
+
+    init(_ movie: Movie) {
+        self.movie = movie
+    }
+}
+
+//MARK: - Extension
+extension MovieViewModel {
+    //MARK: - Title
+    var title: String {
+        return self.movie.title
     }
     
+    //MARK: - Vote_Count
+    var vote_count: String {
+        if (self.movie.vote_count == 0 || self.movie.vote_count == 1) {
+            return "\(movie.vote_count) Like"
+        } else if self.movie.vote_count > 1000 { // MIL
+            let convertToK = Double(self.movie.vote_count / 1000)
+            return "\(String(format: "%.1f", convertToK))K Likes"
+        } else if self.movie.vote_count > 1000000 { // MILHOES
+            let convertToK = Double(self.movie.vote_count / 1000000)
+            return "\(String(format: "%.1f", convertToK))M Likes"
+        } else {
+            return "\(self.movie.vote_count) Likes"
+        }
+    }
+    
+    //MARK: - Popularity
+    var popularity: String {
+        if (self.movie.popularity == 0 || self.movie.popularity == 1) {
+            return "\(self.movie.popularity) view"
+        } else {
+            return "\(self.movie.popularity) views"
+        }
+    }
+    
+    //MARK: - Backdrop_Path
+    var backdrop_path: String {
+        return self.movie.backdrop_path
+    }
 }
